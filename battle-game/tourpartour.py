@@ -2,202 +2,175 @@ import random
 from gear.armure import Armor
 from characters.wizzard import Wizzard
 from characters.barbarian import Barbarian
-from gear.weapon import Weapon, Magic, Spell
-from characters.enemy import Orc
+from gear.weapon import Weapon, Spell
 
-axe = Weapon('Hacha a 2 main', 30)
-wand = Magic('La baguette de sureau', 100, 10, 0.01)
-sword = Weapon('Epée', 20)
-wandfire = Magic('Baguette de feu', 100, 15, 0.01)
-Fireboll = Spell('Boule de feu', 75, 50)
+# Créer les armes et sorts
+axe = Weapon('Hache à 2 mains', 35)
+sword = Weapon('Épée', 40)
+wand = Weapon('Baguette de sureau', 25)
+fire_wand = Weapon('Baguette de feu', 30)
+fireball = Spell('Boule de feu', 75, 50)
 
 def choose_character():
-    print("Choisissez votre personnage:")
+    print("=== CHOIX DU PERSONNAGE ===")
     print("1. Sorcière (Marie)")
     print("2. Barbare (Thor)")
 
-    choice = input("Choisissez votre personnage (1-2) : ")
+    choice = input("Choisissez (1-2): ")
 
     if choice == "1":
-        character = Wizzard('Marie', 150, None, None, 100, 1, Fireboll)
-        print("Vous avez choisi Marie la Sorcière.")
+        character = Wizzard('Marie', 150, None, None, 100, fireball)
+        print("Vous jouez Marie la Sorcière.")
         return character
-
-    elif choice == "2":
-        character = Barbarian('Thor', 200, None, None)
-        print("Vous avez choisi Thor le Barbare.")
+        
+    if choice == "2":
+        character = Barbarian('Thor', 200)
+        print("Vous jouez Thor le Barbare.")
         return character
+        
+    print("Choix invalide!")
+    return choose_character()
 
-    else:
-        print("Choix invalide, veuillez réessayer.")
-        return choose_character()
-
-def choose_enemy(player_character):
-    if isinstance(player_character, Wizzard):
-        enemy = Barbarian('Thor', 175, None, None)
-        print("Vous allez combattre Thor.")
-    else:
-        enemy = Wizzard('Marie', 150, None, None, 100, 1, Fireboll)
-        print("Vous allez combattre Marie.")
+def choose_enemy(player):
+    if isinstance(player, Wizzard):
+        enemy = Barbarian('Thor (IA)', 175)
+        print("Votre ennemi: Thor")
+        return enemy
+        
+    enemy = Wizzard('Marie (IA)', 150, None, None, 100, fireball)
+    print("Votre ennemi: Marie")
     return enemy
 
-def choose_weapon(character):
-    axe = Weapon('Hacha a 2 main', 35)
-    wand = Magic('La baguette de sureau', 25, 10, 0.01)
-    wandfire = Magic('Baguette de feu', 30, 15, 0.01)
-    sword = Weapon('Epée', 40)
-
-    if isinstance(character, Wizzard):
-        print("Armes disponibles pour Sorcière :")
-        print("1. Baguette de sureau")
-        print("2. Baguette de feu")
-        choice = input("Choisissez votre arme (1-2) : ")
-        
-        if choice == "1":
-            print("Vous avez choisi Baguette de sureau.")
-            return wand
-        elif choice == "2":
-            print("Vous avez choisi Baguette de feu.")
-            return wandfire
-        else:
-            print("Choix invalide.")
-            return choose_weapon(character)
-
-    elif isinstance(character, Barbarian):
-        print("Armes disponibles pour Barbare :")
-        print("1. Hache")
-        print("2. Épée")
-        choice = input("Choisissez votre arme (1-2) : ")
-        
-        if choice == "1":
-            print("Vous avez choisi Hache.")
-            return axe
-        elif choice == "2":
-            print("Vous avez choisi Épée.")
-            return sword
-        else:
-            print("Choix invalide.")
-            return choose_weapon(character)
-
-def choose_armor():
-    print("Choisissez une armure :")
-    print("1. Fer (75)")
-    print("2. Diamant (100)")
-    print("3. Netherite (150)")
-    
-    choice = input("Choisissez votre armure (1-3) : ")
-    
-    Iron = Armor("Fer", 75, "Rare")
-    Diamond = Armor("Diamant", 100, "Épique")
-    Netherite = Armor("Netherite", 150, "Légendaire")
+def choose_weapon_wizard():
+    print("Armes pour Sorcière:")
+    print("1. Baguette de sureau")
+    print("2. Baguette de feu")
+    choice = input("Choix (1-2): ")
     
     if choice == "1":
-        print("Vous avez choisi l'armure Fer.")
-        return Iron
-    elif choice == "2":
-        print("Vous avez choisi l'armure Diamant.")
-        return Diamond
-    elif choice == "3":
-        print("Vous avez choisi l'armure Netherite.")
-        return Netherite
-    else:
-        print("Choix invalide.")
-        return choose_armor()
+        return wand
+        
+    return fire_wand
 
-def enemy_weapon(enemy):
-    axe = Weapon("Hacha a 2 main", 30)
-    sword = Weapon("Épée", 20)
-    wand = Magic("La baguette de sureau", 25, 10, 0.01)
-    wandfire = Magic("Baguette de feu", 30, 15, 0.01)
+def choose_weapon_barbarian():
+    print("Armes pour Barbare:")
+    print("1. Hache")
+    print("2. Épée")
+    choice = input("Choix (1-2): ")
+    
+    if choice == "1":
+        return axe
+        
+    return sword
 
+def choose_weapon(character):
+    if isinstance(character, Wizzard):
+        return choose_weapon_wizard()
+        
+    return choose_weapon_barbarian()
+
+def choose_armor():
+    print("Armures disponibles:")
+    print("1. Fer (75 défense)")
+    print("2. Diamant (100 défense)")
+    print("3. Netherite (150 défense)")
+    
+    choice = input("Choix (1-3): ")
+    
+    if choice == "1":
+        return Armor("Fer", 75, "Rare")
+        
+    if choice == "2":
+        return Armor("Diamant", 100, "Épique")
+        
+    return Armor("Netherite", 150, "Légendaire")
+
+def get_random_weapon_for_wizard():
+    return random.choice([wand, fire_wand])
+
+def get_random_weapon_for_barbarian():
+    return random.choice([axe, sword])
+
+def get_random_armor():
+    armors = [
+        Armor("Fer", 75, "Rare"),
+        Armor("Diamant", 100, "Épique"),
+        Armor("Netherite", 150, "Légendaire")
+    ]
+    return random.choice(armors)
+
+def enemy_equipment(enemy):
     if isinstance(enemy, Wizzard):
-        return random.choice([wand, wandfire])
-    elif isinstance(enemy, Barbarian):
-        return random.choice([axe, sword])
-
-def attack(attacker, defender):
-    print(f"\n{attacker.name} attaque {defender.name}!")
+        weapon = get_random_weapon_for_wizard()
     
-    damage = attacker.weapon.damage  
-
-    if isinstance(attacker, Wizzard):
-        if attacker.mana > 0:
-            print(f"Vous avez {attacker.mana} mana.")
-            print("1. Attaque normale")
-            print(f"2. Utiliser un sort (Coût : {attacker.spell.mana} mana)")
-            
-            choice = input("Choisissez votre attaque (1-2) : ")
-            while choice not in ["1", "2"]:
-                print("Choix invalide.")
-                choice = input("Choisissez votre attaque (1-2) : ")
-            
-            if choice == "2":
-                if attacker.mana >= attacker.spell.mana:
-                    attacker.mana -= attacker.spell.mana
-                    damage = attacker.spell.damage
-                    attacker.spell.attack(defender)
-                    print(f"Thor reçoit {damage} dégâts avec le sort {attacker.spell.name}.")
-                    print(f"Sort utilisé : {attacker.spell.name} inflige {damage} dégâts. Mana restant : {attacker.mana}.")
-                else:
-                    print("Mana insuffisant! Attaque normale effectuée.")
-                    damage = attacker.weapon.damage
-                    attacker.weapon.attack(defender)
-                    print(f"Thor reçoit {damage} dégâts avec l'arme {attacker.weapon.name}.")
-            else:
-                damage = attacker.weapon.damage
-                attacker.weapon.attack(defender)
-                print(f"Thor reçoit {damage} dégâts avec l'arme {attacker.weapon.name}.")
-        else:
-            print("Mana épuisé! Attaque normale est utilisée automatiquement.")
-            damage = attacker.weapon.damage
-            attacker.weapon.attack(defender)
-            print(f"Thor reçoit {damage} dégâts avec l'arme {attacker.weapon.name}.")
-    elif isinstance(attacker, Barbarian):
-        damage = attacker.weapon.damage
-        attacker.weapon.attack(defender)
-        print(f"Barbare attaque normalement et inflige {damage} dégâts.")
+    if isinstance(enemy, Barbarian):
+        weapon = get_random_weapon_for_barbarian()
     
-    print(f"Points de vie restants pour {defender.name}: {max(defender.hp, 0)} PV.\n")
+    armor = get_random_armor()
+    return weapon, armor
 
-def game_loop():
-    print("=== BIENVENUE DANS LE JEU DE COMBAT ===")
-    
-    player = choose_character()
-    enemy = choose_enemy(player)
-    
-    # Ajouter un attribut pour identifier le joueur
-    player.is_player = True
-
+def setup_player_equipment(player):
     player_weapon = choose_weapon(player)
     player.equip_weapon(player_weapon)
     
-    enemy_weapon_choice = enemy_weapon(enemy)
-    enemy.equip_weapon(enemy_weapon_choice)
-    
     player_armor = choose_armor()
     player.equip_armor(player_armor)
+
+def setup_enemy_equipment(enemy):
+    enemy_weapon, enemy_armor = enemy_equipment(enemy)
+    enemy.equip_weapon(enemy_weapon)
+    enemy.equip_armor(enemy_armor)
+
+def check_victory(player, enemy):
+    if enemy.hp <= 0:
+        print(f"\n🎉 VICTOIRE! {enemy.name} est vaincu!")
+        return True
+        
+    if player.hp <= 0:
+        print(f"\n DÉFAITE! {player.name} est vaincu...")
+        return True
+        
+    return False
+
+def play_round(player, enemy, round_num):
+    print(f"\n--- ROUND {round_num} ---")
     
-    enemy_armor_choice = Armor("Diamant", 100, "Épique")
-    enemy.equip_armor(enemy_armor_choice)
+    # Tour du joueur
+    print(f"\nTour de {player.name}:")
+    player.attack(enemy)
+    
+    if check_victory(player, enemy):
+        return False
+    
+    # Tour de l'ennemi
+    print(f"\nTour de {enemy.name}:")
+    enemy.attack(player)
+    
+    if check_victory(player, enemy):
+        return False
+    
+    input("\nAppuyez sur Entrée pour continuer...")
+    return True
 
-    round_count = 1
-    while player.hp > 0 and enemy.hp > 0:
-        print(f"\n--- Round {round_count} ---")
-        
-        # Tour du joueur
-        print(f"\nC'est à {player.name} de jouer!")
-        player.attack(enemy)
-        if enemy.hp <= 0:
-            print(f"Victoire! Vous avez vaincu {enemy.name}!")
-            break
-        
-        # Tour de l'ennemi
-        print(f"\nC'est à {enemy.name} de jouer!")
-        enemy.attack(player)
-        if player.hp <= 0:
-            print(f"Défaite... {enemy.name} vous a vaincu.")
-            break
-        
-        round_count += 1
+def game_loop():
+    print("🗡️ BIENVENUE DANS L'ARENE ! ")
+    
+    # Création des personnages
+    player = choose_character()
+    enemy = choose_enemy(player)
+    
+    # Marquer le joueur
+    player.is_player = True
 
-game_loop()
+    # Équipement
+    setup_player_equipment(player)
+    setup_enemy_equipment(enemy)
+
+    # Combat
+    round_num = 1
+    while play_round(player, enemy, round_num):
+        round_num += 1
+
+# Lancer le jeu
+if __name__ == "__main__":
+    game_loop()
